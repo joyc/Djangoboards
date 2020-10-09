@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'widget_tweaks',  # django-widget-tweaks 前端渲染库
+
     'boards',
 ]
 
