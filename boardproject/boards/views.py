@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from .models import Board, Topic, Post
 from .forms import NewTopicForm, PostForm
@@ -16,11 +16,9 @@ def about(request):
 
 
 def board_topics(request, pk):  # url正则中定义了<pk>
-    try:
-        board = get_object_or_404(Board, pk=pk)
-    except Board.DoesNotExist:
-        raise Http404
-    return render(request, 'topics.html', {'board': board})
+    board = get_object_or_404(Board, pk=pk)
+    topics = board.topics.order_by('-last_updated').annotate(replies=Count('posts') - 1)  # 回复数不计算作者的帖子
+    return render(request, 'topics.html', {'board': board, 'topics': topics})
 
 
 @login_required
