@@ -52,6 +52,8 @@ urlpatterns = [
     url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
     url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
     url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$', views.reply_topic, name='reply_topic'),
+    url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/posts/(?P<post_pk>\d+)/edit/$',
+        views.PostUpdateView.as_view(), name='edit_post'),
     # url(r'^about/$', views.about, name='about'),
     # url(r'^u/(?P<username>[\w.@+-]+)/$', views.user_profile, name='user_profile'),
     url(r'^admin/', admin.site.urls),
