@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'widget_tweaks',  # django-widget-tweaks 前端渲染库
 
+    'accounts',
     'boards',
 ]
 
