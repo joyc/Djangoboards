@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
@@ -9,9 +10,15 @@ from .models import Board, Topic, Post
 from .forms import NewTopicForm, PostForm
 
 
-def home(request):
-    boards = Board.objects.all()
-    return render(request, 'home.html', {'boards': boards})
+# def home(request):
+#     boards = Board.objects.all()
+#     return render(request, 'home.html', {'boards': boards})
+
+# GCBV 改写home视图为BoardListView类
+class BoardListView(ListView):
+    model = Board
+    context_object_name = 'boards'
+    template_name = 'home.html'
 
 
 def about(request):
