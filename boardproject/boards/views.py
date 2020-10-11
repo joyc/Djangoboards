@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.views.generic import ListView
 from django.views.generic import UpdateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
@@ -27,7 +28,18 @@ def about(request):
 
 def board_topics(request, pk):  # url正则中定义了<pk>
     board = get_object_or_404(Board, pk=pk)
-    topics = board.topics.order_by('-last_updated').annotate(replies=Count('posts') - 1)  # 回复数不计算作者的帖子
+    queryset = board.topics.order_by('-last_updated').annotate(replies=Count('posts') - 1)  # 作者首发帖子不算在回复数内
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, 20)
+
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
+
     return render(request, 'topics.html', {'board': board, 'topics': topics})
 
 
