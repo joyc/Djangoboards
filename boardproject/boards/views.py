@@ -60,6 +60,24 @@ class TopicListView(ListView):
         return queryset
 
 
+class PostListView(ListView):
+    model = Post
+    context_object_name = 'posts'
+    template_name = 'topic_posts.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        self.topic.views += 1
+        self.topic.save()
+        kwargs['topic'] = self.topic
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.topic = get_object_or_404(Topic, board__pk=self.kwargs.get('pk'), pk=self.kwargs.get('topic_pk'))
+        queryset = self.topic.posts.order_by('created_at')
+        return queryset
+
+
 @login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
